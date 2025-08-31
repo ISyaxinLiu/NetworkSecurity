@@ -16,17 +16,23 @@ TEST_FILE_NAME: str = "test.csv"
 
 SCHEMA_FILE_PATH = os.path.join("data_schema", "schema.yaml")
 
-SAVED_MODEL_DIR =os.path.join("saved_models")
+SAVED_MODEL_DIR = os.path.join("saved_models")
 MODEL_FILE_NAME = "model.pkl"
 
-
-
+"""
+PostgreSQL相关常量 
+"""
+# PostgreSQL数据库配置
+POSTGRES_HOST: str = os.getenv("DB_HOST", "localhost")
+POSTGRES_PORT: str = os.getenv("DB_PORT", "5432")
+POSTGRES_USER: str = os.getenv("DB_USER", "nsproject")
+POSTGRES_PASSWORD: str = os.getenv("DB_PASSWORD", "123")
 
 """
 Data Ingestion related constant start with DATA_INGESTION VAR NAME
 """
-DATA_INGESTION_COLLECTION_NAME: str = "NetworkData"
-DATA_INGESTION_DATABASE_NAME: str = "ns"
+DATA_INGESTION_TABLE_NAME: str = "NetworkData"  # 改为TABLE_NAME，对应PostgreSQL表
+DATA_INGESTION_DATABASE_NAME: str = "ns"        # 你的PostgreSQL数据库名
 DATA_INGESTION_DIR_NAME: str = "data_ingestion"
 DATA_INGESTION_FEATURE_STORE_DIR: str = "feature_store"
 DATA_INGESTION_INGESTED_DIR: str = "ingested"
@@ -56,14 +62,11 @@ DATA_TRANSFORMATION_IMPUTER_PARAMS: dict = {
     "weights": "uniform",
 }
 DATA_TRANSFORMATION_TRAIN_FILE_PATH: str = "train.npy"
-
 DATA_TRANSFORMATION_TEST_FILE_PATH: str = "test.npy"
 
-
 """
-Model Trainer ralated constant start with MODE TRAINER VAR NAME
+Model Trainer related constant start with MODEL TRAINER VAR NAME
 """
-
 MODEL_TRAINER_DIR_NAME: str = "model_trainer"
 MODEL_TRAINER_TRAINED_MODEL_DIR: str = "trained_model"
 MODEL_TRAINER_TRAINED_MODEL_NAME: str = "model.pkl"
