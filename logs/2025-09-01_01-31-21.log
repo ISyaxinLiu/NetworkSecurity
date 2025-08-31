@@ -1,0 +1,145 @@
+[ 2025-09-01 01:31:22,467 ] 182 root - INFO - 开始数据摄取流程
+[ 2025-09-01 01:31:22,467 ] 185 root - INFO - 从PostgreSQL数据库读取数据
+[ 2025-09-01 01:31:22,467 ] 45 root - INFO - 开始从PostgreSQL读取数据: 数据库=ns, 表=NetworkData
+[ 2025-09-01 01:31:22,648 ] 59 root - INFO - 使用SQLAlchemy成功读取数据: 11055 行, 33 列
+[ 2025-09-01 01:31:22,650 ] 88 root - INFO - 移除了数据库ID列
+[ 2025-09-01 01:31:22,650 ] 92 root - INFO - 移除了创建时间列
+[ 2025-09-01 01:31:22,650 ] 97 root - INFO - 数据读取完成，最终数据形状: (11055, 31)
+[ 2025-09-01 01:31:22,650 ] 98 root - INFO - 列名: ['having_IP_Address', 'URL_Length', 'Shortining_Service', 'having_At_Symbol', 'double_slash_redirecting', 'Prefix_Suffix', 'having_Sub_Domain', 'SSLfinal_State', 'Domain_registeration_length', 'Favicon', 'port', 'HTTPS_token', 'Request_URL', 'URL_of_Anchor', 'Links_in_tags', 'SFH', 'Submitting_to_email', 'Abnormal_URL', 'Redirect', 'on_mouseover', 'RightClick', 'popUpWidnow', 'Iframe', 'age_of_domain', 'DNSRecord', 'web_traffic', 'Page_Rank', 'Google_Index', 'Links_pointing_to_page', 'Statistical_report', 'Result']
+[ 2025-09-01 01:31:22,651 ] 189 root - INFO - 读取数据概览:
+[ 2025-09-01 01:31:22,651 ] 190 root - INFO -   - 数据形状: (11055, 31)
+[ 2025-09-01 01:31:22,651 ] 191 root - INFO -   - 缺失值数量: 0
+[ 2025-09-01 01:31:22,651 ] 194 root - INFO -   - 目标变量分布: {1: 6157, -1: 4898}
+[ 2025-09-01 01:31:22,651 ] 197 root - INFO - 导出数据到特征存储
+[ 2025-09-01 01:31:22,678 ] 124 root - INFO - 数据成功导出到特征存储: Artifacts\09_01_2025_01_31_21\data_ingestion\feature_store\phisingData.csv
+[ 2025-09-01 01:31:22,678 ] 125 root - INFO - 导出数据形状: (11055, 31)
+[ 2025-09-01 01:31:22,678 ] 201 root - INFO - 分割数据为训练集和测试集
+[ 2025-09-01 01:31:22,680 ] 146 root - INFO - Performed train test split on the dataframe
+[ 2025-09-01 01:31:22,680 ] 147 root - INFO - 训练集大小: 8844, 测试集大小: 2211
+[ 2025-09-01 01:31:22,680 ] 149 root - INFO - Exited split_data_as_train_test method of Data_Ingestion class
+[ 2025-09-01 01:31:22,681 ] 157 root - INFO - Exporting train and test file path.
+[ 2025-09-01 01:31:22,706 ] 169 root - INFO - Exported train and test file path.
+[ 2025-09-01 01:31:22,707 ] 170 root - INFO - 训练文件: Artifacts\09_01_2025_01_31_21\data_ingestion\ingested\train.csv
+[ 2025-09-01 01:31:22,707 ] 171 root - INFO - 测试文件: Artifacts\09_01_2025_01_31_21\data_ingestion\ingested\test.csv
+[ 2025-09-01 01:31:22,707 ] 210 root - INFO - 数据摄取流程完成
+[ 2025-09-01 01:31:22,707 ] 211 root - INFO - 训练文件: Artifacts\09_01_2025_01_31_21\data_ingestion\ingested\train.csv
+[ 2025-09-01 01:31:22,707 ] 212 root - INFO - 测试文件: Artifacts\09_01_2025_01_31_21\data_ingestion\ingested\test.csv
+[ 2025-09-01 01:31:22,712 ] 182 root - INFO - 开始数据验证流程
+[ 2025-09-01 01:31:22,712 ] 183 root - INFO - 训练文件: Artifacts\09_01_2025_01_31_21\data_ingestion\ingested\train.csv
+[ 2025-09-01 01:31:22,712 ] 184 root - INFO - 测试文件: Artifacts\09_01_2025_01_31_21\data_ingestion\ingested\test.csv
+[ 2025-09-01 01:31:22,738 ] 190 root - INFO - 训练数据形状: (8844, 31)
+[ 2025-09-01 01:31:22,739 ] 191 root - INFO - 测试数据形状: (2211, 31)
+[ 2025-09-01 01:31:22,739 ] 44 root - INFO - Required number of columns: 31
+[ 2025-09-01 01:31:22,739 ] 45 root - INFO - Data frame has columns: 31
+[ 2025-09-01 01:31:22,739 ] 46 root - INFO - Data frame columns: ['having_IP_Address', 'URL_Length', 'Shortining_Service', 'having_At_Symbol', 'double_slash_redirecting', 'Prefix_Suffix', 'having_Sub_Domain', 'SSLfinal_State', 'Domain_registeration_length', 'Favicon', 'port', 'HTTPS_token', 'Request_URL', 'URL_of_Anchor', 'Links_in_tags', 'SFH', 'Submitting_to_email', 'Abnormal_URL', 'Redirect', 'on_mouseover', 'RightClick', 'popUpWidnow', 'Iframe', 'age_of_domain', 'DNSRecord', 'web_traffic', 'Page_Rank', 'Google_Index', 'Links_pointing_to_page', 'Statistical_report', 'Result']
+[ 2025-09-01 01:31:22,739 ] 44 root - INFO - Required number of columns: 31
+[ 2025-09-01 01:31:22,739 ] 45 root - INFO - Data frame has columns: 31
+[ 2025-09-01 01:31:22,739 ] 46 root - INFO - Data frame columns: ['having_IP_Address', 'URL_Length', 'Shortining_Service', 'having_At_Symbol', 'double_slash_redirecting', 'Prefix_Suffix', 'having_Sub_Domain', 'SSLfinal_State', 'Domain_registeration_length', 'Favicon', 'port', 'HTTPS_token', 'Request_URL', 'URL_of_Anchor', 'Links_in_tags', 'SFH', 'Submitting_to_email', 'Abnormal_URL', 'Redirect', 'on_mouseover', 'RightClick', 'popUpWidnow', 'Iframe', 'age_of_domain', 'DNSRecord', 'web_traffic', 'Page_Rank', 'Google_Index', 'Links_pointing_to_page', 'Statistical_report', 'Result']
+[ 2025-09-01 01:31:22,739 ] 82 root - INFO - 所有数值列验证通过
+[ 2025-09-01 01:31:22,740 ] 82 root - INFO - 所有数值列验证通过
+[ 2025-09-01 01:31:22,740 ] 108 root - INFO - Target column validation passed. Values: [-1  1]
+[ 2025-09-01 01:31:22,740 ] 108 root - INFO - Target column validation passed. Values: [-1  1]
+[ 2025-09-01 01:31:22,740 ] 232 root - INFO - 开始检测数据漂移
+[ 2025-09-01 01:31:22,742 ] 145 root - INFO - Column having_IP_Address: p_value=0.9903, drift=False
+[ 2025-09-01 01:31:22,744 ] 145 root - INFO - Column URL_Length: p_value=1.0000, drift=False
+[ 2025-09-01 01:31:22,745 ] 145 root - INFO - Column Shortining_Service: p_value=1.0000, drift=False
+[ 2025-09-01 01:31:22,745 ] 145 root - INFO - Column having_At_Symbol: p_value=1.0000, drift=False
+[ 2025-09-01 01:31:22,746 ] 145 root - INFO - Column double_slash_redirecting: p_value=1.0000, drift=False
+[ 2025-09-01 01:31:22,746 ] 145 root - INFO - Column Prefix_Suffix: p_value=1.0000, drift=False
+[ 2025-09-01 01:31:22,750 ] 145 root - INFO - Column having_Sub_Domain: p_value=0.2003, drift=False
+[ 2025-09-01 01:31:22,752 ] 145 root - INFO - Column SSLfinal_State: p_value=0.9715, drift=False
+[ 2025-09-01 01:31:22,753 ] 145 root - INFO - Column Domain_registeration_length: p_value=1.0000, drift=False
+[ 2025-09-01 01:31:22,754 ] 145 root - INFO - Column Favicon: p_value=1.0000, drift=False
+[ 2025-09-01 01:31:22,754 ] 145 root - INFO - Column port: p_value=1.0000, drift=False
+[ 2025-09-01 01:31:22,755 ] 145 root - INFO - Column HTTPS_token: p_value=0.9988, drift=False
+[ 2025-09-01 01:31:22,756 ] 145 root - INFO - Column Request_URL: p_value=1.0000, drift=False
+[ 2025-09-01 01:31:22,757 ] 145 root - INFO - Column URL_of_Anchor: p_value=1.0000, drift=False
+[ 2025-09-01 01:31:22,758 ] 145 root - INFO - Column Links_in_tags: p_value=1.0000, drift=False
+[ 2025-09-01 01:31:22,760 ] 145 root - INFO - Column SFH: p_value=0.9786, drift=False
+[ 2025-09-01 01:31:22,761 ] 145 root - INFO - Column Submitting_to_email: p_value=1.0000, drift=False
+[ 2025-09-01 01:31:22,762 ] 145 root - INFO - Column Abnormal_URL: p_value=0.9994, drift=False
+[ 2025-09-01 01:31:22,763 ] 145 root - INFO - Column Redirect: p_value=1.0000, drift=False
+[ 2025-09-01 01:31:22,764 ] 145 root - INFO - Column on_mouseover: p_value=1.0000, drift=False
+[ 2025-09-01 01:31:22,765 ] 145 root - INFO - Column RightClick: p_value=1.0000, drift=False
+[ 2025-09-01 01:31:22,766 ] 145 root - INFO - Column popUpWidnow: p_value=1.0000, drift=False
+[ 2025-09-01 01:31:22,766 ] 145 root - INFO - Column Iframe: p_value=1.0000, drift=False
+[ 2025-09-01 01:31:22,769 ] 145 root - INFO - Column age_of_domain: p_value=0.6771, drift=False
+[ 2025-09-01 01:31:22,769 ] 145 root - INFO - Column DNSRecord: p_value=1.0000, drift=False
+[ 2025-09-01 01:31:22,771 ] 145 root - INFO - Column web_traffic: p_value=0.9965, drift=False
+[ 2025-09-01 01:31:22,772 ] 145 root - INFO - Column Page_Rank: p_value=0.9983, drift=False
+[ 2025-09-01 01:31:22,773 ] 145 root - INFO - Column Google_Index: p_value=1.0000, drift=False
+[ 2025-09-01 01:31:22,775 ] 145 root - INFO - Column Links_pointing_to_page: p_value=0.9688, drift=False
+[ 2025-09-01 01:31:22,776 ] 145 root - INFO - Column Statistical_report: p_value=1.0000, drift=False
+[ 2025-09-01 01:31:22,776 ] 145 root - INFO - Column Result: p_value=1.0000, drift=False
+[ 2025-09-01 01:31:22,782 ] 164 root - INFO - Drift report saved to: Artifacts\09_01_2025_01_31_21\data_validation\drift_report\report.yaml
+[ 2025-09-01 01:31:22,782 ] 238 root - INFO - 未检测到显著数据漂移
+[ 2025-09-01 01:31:22,812 ] 259 root - INFO - 数据验证通过，文件保存到valid目录
+[ 2025-09-01 01:31:22,812 ] 291 root - INFO - 数据验证流程完成
+[ 2025-09-01 01:31:22,846 ] 182 root - INFO - 开始数据摄取流程
+[ 2025-09-01 01:31:22,846 ] 185 root - INFO - 从PostgreSQL数据库读取数据
+[ 2025-09-01 01:31:22,846 ] 45 root - INFO - 开始从PostgreSQL读取数据: 数据库=ns, 表=NetworkData
+[ 2025-09-01 01:31:22,934 ] 59 root - INFO - 使用SQLAlchemy成功读取数据: 11055 行, 33 列
+[ 2025-09-01 01:31:22,935 ] 88 root - INFO - 移除了数据库ID列
+[ 2025-09-01 01:31:22,935 ] 92 root - INFO - 移除了创建时间列
+[ 2025-09-01 01:31:22,935 ] 97 root - INFO - 数据读取完成，最终数据形状: (11055, 31)
+[ 2025-09-01 01:31:22,935 ] 98 root - INFO - 列名: ['having_IP_Address', 'URL_Length', 'Shortining_Service', 'having_At_Symbol', 'double_slash_redirecting', 'Prefix_Suffix', 'having_Sub_Domain', 'SSLfinal_State', 'Domain_registeration_length', 'Favicon', 'port', 'HTTPS_token', 'Request_URL', 'URL_of_Anchor', 'Links_in_tags', 'SFH', 'Submitting_to_email', 'Abnormal_URL', 'Redirect', 'on_mouseover', 'RightClick', 'popUpWidnow', 'Iframe', 'age_of_domain', 'DNSRecord', 'web_traffic', 'Page_Rank', 'Google_Index', 'Links_pointing_to_page', 'Statistical_report', 'Result']
+[ 2025-09-01 01:31:22,935 ] 189 root - INFO - 读取数据概览:
+[ 2025-09-01 01:31:22,936 ] 190 root - INFO -   - 数据形状: (11055, 31)
+[ 2025-09-01 01:31:22,936 ] 191 root - INFO -   - 缺失值数量: 0
+[ 2025-09-01 01:31:22,936 ] 194 root - INFO -   - 目标变量分布: {1: 6157, -1: 4898}
+[ 2025-09-01 01:31:22,936 ] 197 root - INFO - 导出数据到特征存储
+[ 2025-09-01 01:31:22,962 ] 124 root - INFO - 数据成功导出到特征存储: Artifacts\09_01_2025_01_31_21\data_ingestion\feature_store\phisingData.csv
+[ 2025-09-01 01:31:22,962 ] 125 root - INFO - 导出数据形状: (11055, 31)
+[ 2025-09-01 01:31:22,962 ] 201 root - INFO - 分割数据为训练集和测试集
+[ 2025-09-01 01:31:22,965 ] 146 root - INFO - Performed train test split on the dataframe
+[ 2025-09-01 01:31:22,965 ] 147 root - INFO - 训练集大小: 8844, 测试集大小: 2211
+[ 2025-09-01 01:31:22,965 ] 149 root - INFO - Exited split_data_as_train_test method of Data_Ingestion class
+[ 2025-09-01 01:31:22,965 ] 157 root - INFO - Exporting train and test file path.
+[ 2025-09-01 01:31:22,989 ] 169 root - INFO - Exported train and test file path.
+[ 2025-09-01 01:31:22,989 ] 170 root - INFO - 训练文件: Artifacts\09_01_2025_01_31_21\data_ingestion\ingested\train.csv
+[ 2025-09-01 01:31:22,989 ] 171 root - INFO - 测试文件: Artifacts\09_01_2025_01_31_21\data_ingestion\ingested\test.csv
+[ 2025-09-01 01:31:22,989 ] 210 root - INFO - 数据摄取流程完成
+[ 2025-09-01 01:31:22,989 ] 211 root - INFO - 训练文件: Artifacts\09_01_2025_01_31_21\data_ingestion\ingested\train.csv
+[ 2025-09-01 01:31:22,989 ] 212 root - INFO - 测试文件: Artifacts\09_01_2025_01_31_21\data_ingestion\ingested\test.csv
+[ 2025-09-01 01:31:23,016 ] 44 root - INFO - Required number of columns: 31
+[ 2025-09-01 01:31:23,016 ] 45 root - INFO - Data frame has columns: 31
+[ 2025-09-01 01:31:23,016 ] 46 root - INFO - Data frame columns: ['having_IP_Address', 'URL_Length', 'Shortining_Service', 'having_At_Symbol', 'double_slash_redirecting', 'Prefix_Suffix', 'having_Sub_Domain', 'SSLfinal_State', 'Domain_registeration_length', 'Favicon', 'port', 'HTTPS_token', 'Request_URL', 'URL_of_Anchor', 'Links_in_tags', 'SFH', 'Submitting_to_email', 'Abnormal_URL', 'Redirect', 'on_mouseover', 'RightClick', 'popUpWidnow', 'Iframe', 'age_of_domain', 'DNSRecord', 'web_traffic', 'Page_Rank', 'Google_Index', 'Links_pointing_to_page', 'Statistical_report', 'Result']
+[ 2025-09-01 01:31:23,016 ] 44 root - INFO - Required number of columns: 31
+[ 2025-09-01 01:31:23,016 ] 45 root - INFO - Data frame has columns: 31
+[ 2025-09-01 01:31:23,017 ] 46 root - INFO - Data frame columns: ['having_IP_Address', 'URL_Length', 'Shortining_Service', 'having_At_Symbol', 'double_slash_redirecting', 'Prefix_Suffix', 'having_Sub_Domain', 'SSLfinal_State', 'Domain_registeration_length', 'Favicon', 'port', 'HTTPS_token', 'Request_URL', 'URL_of_Anchor', 'Links_in_tags', 'SFH', 'Submitting_to_email', 'Abnormal_URL', 'Redirect', 'on_mouseover', 'RightClick', 'popUpWidnow', 'Iframe', 'age_of_domain', 'DNSRecord', 'web_traffic', 'Page_Rank', 'Google_Index', 'Links_pointing_to_page', 'Statistical_report', 'Result']
+[ 2025-09-01 01:31:23,017 ] 82 root - INFO - 所有数值列验证通过
+[ 2025-09-01 01:31:23,018 ] 82 root - INFO - 所有数值列验证通过
+[ 2025-09-01 01:31:23,018 ] 108 root - INFO - Target column validation passed. Values: [-1  1]
+[ 2025-09-01 01:31:23,018 ] 108 root - INFO - Target column validation passed. Values: [-1  1]
+[ 2025-09-01 01:31:23,020 ] 145 root - INFO - Column having_IP_Address: p_value=0.9903, drift=False
+[ 2025-09-01 01:31:23,022 ] 145 root - INFO - Column URL_Length: p_value=1.0000, drift=False
+[ 2025-09-01 01:31:23,023 ] 145 root - INFO - Column Shortining_Service: p_value=1.0000, drift=False
+[ 2025-09-01 01:31:23,023 ] 145 root - INFO - Column having_At_Symbol: p_value=1.0000, drift=False
+[ 2025-09-01 01:31:23,024 ] 145 root - INFO - Column double_slash_redirecting: p_value=1.0000, drift=False
+[ 2025-09-01 01:31:23,025 ] 145 root - INFO - Column Prefix_Suffix: p_value=1.0000, drift=False
+[ 2025-09-01 01:31:23,028 ] 145 root - INFO - Column having_Sub_Domain: p_value=0.2003, drift=False
+[ 2025-09-01 01:31:23,030 ] 145 root - INFO - Column SSLfinal_State: p_value=0.9715, drift=False
+[ 2025-09-01 01:31:23,031 ] 145 root - INFO - Column Domain_registeration_length: p_value=1.0000, drift=False
+[ 2025-09-01 01:31:23,032 ] 145 root - INFO - Column Favicon: p_value=1.0000, drift=False
+[ 2025-09-01 01:31:23,032 ] 145 root - INFO - Column port: p_value=1.0000, drift=False
+[ 2025-09-01 01:31:23,033 ] 145 root - INFO - Column HTTPS_token: p_value=0.9988, drift=False
+[ 2025-09-01 01:31:23,034 ] 145 root - INFO - Column Request_URL: p_value=1.0000, drift=False
+[ 2025-09-01 01:31:23,035 ] 145 root - INFO - Column URL_of_Anchor: p_value=1.0000, drift=False
+[ 2025-09-01 01:31:23,036 ] 145 root - INFO - Column Links_in_tags: p_value=1.0000, drift=False
+[ 2025-09-01 01:31:23,039 ] 145 root - INFO - Column SFH: p_value=0.9786, drift=False
+[ 2025-09-01 01:31:23,039 ] 145 root - INFO - Column Submitting_to_email: p_value=1.0000, drift=False
+[ 2025-09-01 01:31:23,040 ] 145 root - INFO - Column Abnormal_URL: p_value=0.9994, drift=False
+[ 2025-09-01 01:31:23,041 ] 145 root - INFO - Column Redirect: p_value=1.0000, drift=False
+[ 2025-09-01 01:31:23,042 ] 145 root - INFO - Column on_mouseover: p_value=1.0000, drift=False
+[ 2025-09-01 01:31:23,043 ] 145 root - INFO - Column RightClick: p_value=1.0000, drift=False
+[ 2025-09-01 01:31:23,045 ] 145 root - INFO - Column popUpWidnow: p_value=1.0000, drift=False
+[ 2025-09-01 01:31:23,045 ] 145 root - INFO - Column Iframe: p_value=1.0000, drift=False
+[ 2025-09-01 01:31:23,048 ] 145 root - INFO - Column age_of_domain: p_value=0.6771, drift=False
+[ 2025-09-01 01:31:23,048 ] 145 root - INFO - Column DNSRecord: p_value=1.0000, drift=False
+[ 2025-09-01 01:31:23,050 ] 145 root - INFO - Column web_traffic: p_value=0.9965, drift=False
+[ 2025-09-01 01:31:23,051 ] 145 root - INFO - Column Page_Rank: p_value=0.9983, drift=False
+[ 2025-09-01 01:31:23,052 ] 145 root - INFO - Column Google_Index: p_value=1.0000, drift=False
+[ 2025-09-01 01:31:23,054 ] 145 root - INFO - Column Links_pointing_to_page: p_value=0.9688, drift=False
+[ 2025-09-01 01:31:23,054 ] 145 root - INFO - Column Statistical_report: p_value=1.0000, drift=False
+[ 2025-09-01 01:31:23,055 ] 145 root - INFO - Column Result: p_value=1.0000, drift=False
+[ 2025-09-01 01:31:23,059 ] 164 root - INFO - Drift report saved to: Artifacts\09_01_2025_01_31_21\data_validation\drift_report\report.yaml

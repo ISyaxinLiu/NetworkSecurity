@@ -5,5 +5,10 @@ scikit-learn
 pymongo
 matplotlib
 certifi
+# PostgreSQL相关包
+psycopg2-binary>=2.9.0
+SQLAlchemy>=1.4.0
 
--e .
+dill
+pyaml
+#-e .
