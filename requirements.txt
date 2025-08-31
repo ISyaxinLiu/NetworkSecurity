@@ -11,4 +11,9 @@ SQLAlchemy>=1.4.0
 
 dill
 pyaml
+mlflow
+dagshub
+fastapi
+uvicorn
+
 #-e .
