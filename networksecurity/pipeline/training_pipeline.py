@@ -78,7 +78,7 @@ class TrainingPipeline:
                 model_trainer_config=self.model_trainer_config,
             )
 
-            model_trainer_artifact = model_trainer.initiate_model_trainer()
+            model_trainer_artifact = model_trainer.initiate_model_trainer(use_enhanced=True)
             logging.info("Model training completed")
             return model_trainer_artifact
 

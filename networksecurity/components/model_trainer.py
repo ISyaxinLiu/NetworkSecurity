@@ -1,7 +1,7 @@
 import os
 import sys
 import numpy as np
-from datetime import datetime  # 添加这行
+from datetime import datetime
 
 from networksecurity.exception.exception import NetworkSecurityException 
 from networksecurity.logging.logger import logging
@@ -11,7 +11,9 @@ from networksecurity.entity.config_entity import ModelTrainerConfig
 
 from networksecurity.utils.ml_utils.model.estimator import NetworkModel
 from networksecurity.utils.main_utils.utils import save_object, load_object
-from networksecurity.utils.main_utils.utils import load_numpy_array_data, evaluate_classification_models  # 使用分类版本
+from networksecurity.utils.main_utils.utils import load_numpy_array_data, evaluate_classification_models
+# 新增导入：并行优化版本
+from networksecurity.utils.main_utils.utils import evaluate_classification_models_parallel
 from networksecurity.utils.ml_utils.metric.classification_metric import get_classification_score
 
 from sklearn.linear_model import LogisticRegression
@@ -29,8 +31,6 @@ from urllib.parse import urlparse
 import dagshub
 dagshub.init(repo_owner='ISyaxinLiu', repo_name='NetworkSecurity', mlflow=True)
 
-
-
 class ModelTrainer:
     def __init__(self, model_trainer_config: ModelTrainerConfig, 
                  data_transformation_artifact: DataTransformationArtifact):
@@ -40,9 +40,9 @@ class ModelTrainer:
         except Exception as e:
             raise NetworkSecurityException(e, sys)
     
-    def track_mlflow(self, best_model, classificationmetric, model_name: str):
+    def track_mlflow(self, best_model, classificationmetric, model_name: str, additional_metrics=None):
         """
-        使用MLflow追踪模型实验 - 修复版本
+        使用MLflow追踪模型实验 - 增强版本
         """
         print(f"开始MLflow跟踪: {model_name}")
         
@@ -56,7 +56,7 @@ class ModelTrainer:
             print("MLflow registry URI设置完成")
             
             # 设置实验
-            experiment_name = "NetworkSecurity_Training"
+            experiment_name = "NetworkSecurity_Training_Enhanced"  # 新实验名，区分升级版
             try:
                 mlflow.set_experiment(experiment_name)
                 print(f"实验设置成功: {experiment_name}")
@@ -77,19 +77,27 @@ class ModelTrainer:
                 
                 print(f"记录指标: F1={f1_score:.4f}, Precision={precision_score:.4f}, Recall={recall_score:.4f}")
 
-                # 记录指标
+                # 记录基础指标
                 mlflow.log_metric("f1_score", f1_score)
                 mlflow.log_metric("precision", precision_score)
                 mlflow.log_metric("recall_score", recall_score)
                 
+                # 记录额外指标（如果有）
+                if additional_metrics:
+                    for key, value in additional_metrics.items():
+                        if isinstance(value, (int, float)):
+                            mlflow.log_metric(f"additional_{key}", float(value))
+                
                 # 记录参数
                 mlflow.log_param("model_type", model_name)
                 mlflow.log_param("data_source", "postgresql")
+                mlflow.log_param("optimization_method", "optuna_parallel")  # 新增标识
                 mlflow.log_param("timestamp", datetime.now().isoformat())
                 
                 # 记录标签
                 mlflow.set_tag("project", "NetworkSecurity")
                 mlflow.set_tag("task", "phishing_detection")
+                mlflow.set_tag("version", "enhanced_v1")  # 版本标识
                 
                 print("指标和参数记录完成")
                                 
@@ -97,11 +105,7 @@ class ModelTrainer:
                 try:
                     tracking_url_type_store = urlparse(mlflow.get_tracking_uri()).scheme
                     if tracking_url_type_store != "file":
-                        mlflow.sklearn.log_model(
-                            best_model, 
-                            "model", 
-                            registered_model_name=f"NetworkSecurity_{model_name}"
-                        )
+                        mlflow.sklearn.log_model(best_model, "model")  # 移除registered_model_name参数
                         print("模型注册完成")
                     else:
                         mlflow.sklearn.log_model(best_model, "model")
@@ -127,19 +131,210 @@ class ModelTrainer:
             import traceback
             traceback.print_exc()
             logging.warning(f"MLflow tracking failed: {str(e)}")
-        
 
+    def train_model_enhanced(self, X_train, y_train, X_test, y_test):
+        """
+        🔥 增强版训练方法：Optuna + 并行化
+        """
+        try:
+            logging.info("=== 开始增强版模型训练 ===")
+            logging.info("特性：Optuna贝叶斯优化 + 并行训练 + 详细结果记录")
+            
+            models = {
+                "Random Forest": RandomForestClassifier(random_state=42),
+                "Decision Tree": DecisionTreeClassifier(random_state=42),
+                "Gradient Boosting": GradientBoostingClassifier(random_state=42),
+                "Logistic Regression": LogisticRegression(random_state=42, max_iter=1000),
+                "AdaBoost": AdaBoostClassifier(random_state=42),
+            }
+            
+            # 🚀 扩展的超参数空间（面试加分点）
+            params = {
+                "Decision Tree": {
+                    'criterion': ['gini', 'entropy'],
+                    'max_depth': [3, 5, 7, 10, 15, None],
+                    'min_samples_split': [2, 5, 10, 20],
+                    'min_samples_leaf': [1, 2, 5, 10],
+                },
+                "Random Forest": {
+                    'n_estimators': [50, 100, 200, 300],
+                    'max_depth': [3, 5, 7, 10, 15, None],
+                    'min_samples_split': [2, 5, 10],
+                    'min_samples_leaf': [1, 2, 5],
+                    'max_features': ['sqrt', 'log2'],
+                },
+                "Gradient Boosting": {
+                    'learning_rate': [0.01, 0.05, 0.1, 0.2],
+                    'subsample': [0.6, 0.7, 0.8, 0.9, 1.0],
+                    'n_estimators': [50, 100, 200, 300],
+                    'max_depth': [3, 4, 5, 6, 7]
+                },
+                "Logistic Regression": {
+                    'C': [0.001, 0.01, 0.1, 1.0, 10.0, 100.0],
+                    'solver': ['liblinear', 'saga', 'lbfgs'],
+                    'penalty': ['l1', 'l2', 'none'],
+                },
+                "AdaBoost": {
+                    'learning_rate': [0.01, 0.05, 0.1, 0.5, 1.0],
+                    'n_estimators': [50, 100, 200, 300, 500],
+                    'algorithm': ['SAMME', 'SAMME.R']
+                }
+            }
+            
+            logging.info(f"训练数据形状: {X_train.shape}")
+            logging.info(f"测试数据形状: {X_test.shape}")
+            logging.info(f"训练标签分布: {dict(zip(*np.unique(y_train, return_counts=True)))}")
+            logging.info(f"测试标签分布: {dict(zip(*np.unique(y_test, return_counts=True)))}")
+            
+            # 🎯 使用并行化Optuna优化（核心升级）
+            import time
+            start_time = time.time()
+            
+            model_report: dict = evaluate_classification_models_parallel(
+                X_train=X_train, y_train=y_train, 
+                X_test=X_test, y_test=y_test,
+                models=models, param=params,
+                use_optuna=True,  # 启用Optuna
+                n_trials=30,      # 每个模型30次试验（可调整）
+                n_jobs=-1         # 使用所有CPU核心
+            )
+            
+            end_time = time.time()
+            optimization_time = end_time - start_time
+            logging.info(f"🚀 并行优化完成！耗时: {optimization_time:.2f}秒")
+            
+            # 🏆 获取最佳模型
+            best_model_score = 0
+            best_model_name = None
+            
+            logging.info("=== 模型性能详细报告 ===")
+            for model_name, metrics in model_report.items():
+                f1_score = metrics['f1_score']
+                logging.info(f"{model_name}:")
+                logging.info(f"  F1分数: {f1_score:.4f}")
+                logging.info(f"  精确率: {metrics['precision_score']:.4f}")
+                logging.info(f"  召回率: {metrics['recall_score']:.4f}")
+                logging.info(f"  准确率: {metrics['accuracy']:.4f}")
+                logging.info(f"  最佳参数: {metrics.get('best_params', {})}")
+                if 'n_trials' in metrics:
+                    logging.info(f"  优化试验次数: {metrics['n_trials']}")
+                logging.info("")
+                
+                if f1_score > best_model_score:
+                    best_model_score = f1_score
+                    best_model_name = model_name
+            
+            logging.info(f"🏆 最佳模型: {best_model_name}, F1分数: {best_model_score:.4f}")
+            
+            # 🔧 重新训练最佳模型
+            best_model = models[best_model_name]
+            best_params = model_report[best_model_name].get('best_params', {})
+            
+            if best_params:
+                best_model.set_params(**best_params)
+                logging.info(f"应用最佳参数: {best_params}")
+            
+            best_model.fit(X_train, y_train)
+            
+            # 📊 计算详细指标
+            y_train_pred = best_model.predict(X_train)
+            classification_train_metric = get_classification_score(y_true=y_train, y_pred=y_train_pred)
+            
+            y_test_pred = best_model.predict(X_test)
+            classification_test_metric = get_classification_score(y_true=y_test, y_pred=y_test_pred)
+            
+            logging.info(f"📈 最终训练集指标 - F1: {classification_train_metric.f1_score:.4f}, "
+                        f"精确率: {classification_train_metric.precision_score:.4f}, "
+                        f"召回率: {classification_train_metric.recall_score:.4f}")
+            
+            logging.info(f"📊 最终测试集指标 - F1: {classification_test_metric.f1_score:.4f}, "
+                        f"精确率: {classification_test_metric.precision_score:.4f}, "
+                        f"召回率: {classification_test_metric.recall_score:.4f}")
+            
+            # 🔍 性能检查
+            if classification_test_metric.f1_score < self.model_trainer_config.expected_accuracy:
+                logging.warning(f"⚠️ 模型F1分数 {classification_test_metric.f1_score:.4f} "
+                              f"低于期望阈值 {self.model_trainer_config.expected_accuracy}")
+            
+            performance_diff = abs(classification_train_metric.f1_score - classification_test_metric.f1_score)
+            if performance_diff > self.model_trainer_config.overfitting_underfitting_threshold:
+                logging.warning(f"⚠️ 检测到可能的过拟合/欠拟合，训练测试性能差异: {performance_diff:.4f}")
+            else:
+                logging.info(f"✅ 模型泛化性能良好，训练测试性能差异: {performance_diff:.4f}")
+            
+            # 📝 保存详细结果报告
+            try:
+                import pandas as pd
+                results_data = []
+                for name, metrics in model_report.items():
+                    results_data.append({
+                        'Model': name,
+                        'F1_Score': metrics['f1_score'],
+                        'Precision': metrics['precision_score'],
+                        'Recall': metrics['recall_score'],
+                        'Accuracy': metrics['accuracy'],
+                        'Best_Params': str(metrics.get('best_params', {})),
+                        'Is_Best': name == best_model_name
+                    })
+                
+                df_results = pd.DataFrame(results_data)
+                df_results = df_results.sort_values('F1_Score', ascending=False)
+                
+                os.makedirs("model_comparison_results", exist_ok=True)
+                csv_path = f"model_comparison_results/enhanced_results_{datetime.now().strftime('%Y%m%d_%H%M%S')}.csv"
+                df_results.to_csv(csv_path, index=False)
+                logging.info(f"📁 详细结果已保存到: {csv_path}")
+                
+            except Exception as e:
+                logging.warning(f"结果保存失败: {str(e)}")
+            
+            # 🔄 MLflow追踪
+            try:
+                additional_metrics = {
+                    'optimization_time': optimization_time,
+                    'n_models_compared': len(models),
+                    'performance_gap': performance_diff
+                }
+                self.track_mlflow(best_model, classification_test_metric, best_model_name, additional_metrics)
+            except Exception as mlflow_error:
+                logging.warning(f"MLflow追踪失败: {str(mlflow_error)}")
+            
+            # 💾 保存模型
+            preprocessor = load_object(file_path=self.data_transformation_artifact.transformed_object_file_path)
+            
+            # 创建输出目录
+            model_dir_path = os.path.dirname(self.model_trainer_config.trained_model_file_path)
+            os.makedirs(model_dir_path, exist_ok=True)
+            
+            # 创建完整的网络模型
+            network_model = NetworkModel(preprocessor=preprocessor, model=best_model)
+            
+            # 保存完整模型
+            save_object(self.model_trainer_config.trained_model_file_path, obj=network_model)
+            
+            # 保存到final_model目录
+            os.makedirs("final_model", exist_ok=True)
+            save_object("final_model/model_enhanced.pkl", network_model)
+            
+            logging.info(f"✅ 增强版模型已保存到: {self.model_trainer_config.trained_model_file_path}")
+            logging.info(f"✅ 增强版模型已保存到: final_model/model_enhanced.pkl")
+            
+            # 创建模型训练工件
+            model_trainer_artifact = ModelTrainerArtifact(
+                trained_model_file_path=self.model_trainer_config.trained_model_file_path,
+                train_metric_artifact=classification_train_metric,
+                test_metric_artifact=classification_test_metric
+            )
+            
+            logging.info("🎉 增强版模型训练完成!")
+            return model_trainer_artifact
+            
+        except Exception as e:
+            raise NetworkSecurityException(e, sys)
 
-
-
-
-
-
-
-        
     def train_model(self, X_train, y_train, X_test, y_test):
         """
-        训练和评估多个模型
+        原版训练方法 - 保留兼容性
         """
         try:
             logging.info("开始模型训练和评估")
@@ -148,7 +343,7 @@ class ModelTrainer:
                 "Random Forest": RandomForestClassifier(verbose=1),
                 "Decision Tree": DecisionTreeClassifier(),
                 "Gradient Boosting": GradientBoostingClassifier(verbose=1),
-                "Logistic Regression": LogisticRegression(verbose=1, max_iter=1000),  # 增加迭代次数
+                "Logistic Regression": LogisticRegression(verbose=1, max_iter=1000),
                 "AdaBoost": AdaBoostClassifier(),
             }
             
@@ -181,7 +376,7 @@ class ModelTrainer:
             logging.info(f"训练标签分布: {dict(zip(*np.unique(y_train, return_counts=True)))}")
             logging.info(f"测试标签分布: {dict(zip(*np.unique(y_test, return_counts=True)))}")
             
-            # 使用分类模型评估函数
+            # 使用原版分类模型评估函数
             model_report: dict = evaluate_classification_models(
                 X_train=X_train, y_train=y_train, 
                 X_test=X_test, y_test=y_test,
@@ -252,12 +447,12 @@ class ModelTrainer:
             # 创建完整的网络模型
             network_model = NetworkModel(preprocessor=preprocessor, model=best_model)
             
-            # 保存完整模型 (修复原代码中的错误)
+            # 保存完整模型
             save_object(self.model_trainer_config.trained_model_file_path, obj=network_model)
             
             # 保存到final_model目录
             os.makedirs("final_model", exist_ok=True)
-            save_object("final_model/model.pkl", network_model)  # 保存完整的NetworkModel而不只是best_model
+            save_object("final_model/model.pkl", network_model)
             
             logging.info(f"模型已保存到: {self.model_trainer_config.trained_model_file_path}")
             logging.info(f"模型已保存到: final_model/model.pkl")
@@ -274,9 +469,12 @@ class ModelTrainer:
         except Exception as e:
             raise NetworkSecurityException(e, sys)
         
-    def initiate_model_trainer(self) -> ModelTrainerArtifact:
+    def initiate_model_trainer(self, use_enhanced=True) -> ModelTrainerArtifact:
         """
         启动模型训练流程
+        
+        Args:
+            use_enhanced: 是否使用增强版训练（默认True）
         """
         try:
             logging.info("开始模型训练流程")
@@ -308,8 +506,13 @@ class ModelTrainer:
             logging.info(f"训练样本数: {len(y_train)}")
             logging.info(f"测试样本数: {len(y_test)}")
 
-            # 开始训练模型
-            model_trainer_artifact = self.train_model(X_train, y_train, X_test, y_test)
+            # 🚀 选择训练模式
+            if use_enhanced:
+                logging.info("🔥 使用增强版训练模式（Optuna + 并行化）")
+                model_trainer_artifact = self.train_model_enhanced(X_train, y_train, X_test, y_test)
+            else:
+                logging.info("使用原版训练模式（GridSearch）")
+                model_trainer_artifact = self.train_model(X_train, y_train, X_test, y_test)
             
             logging.info("模型训练流程完成")
             logging.info(f"模型训练工件: {model_trainer_artifact}")

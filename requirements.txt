@@ -8,12 +8,17 @@ certifi
 # PostgreSQL相关包
 psycopg2-binary>=2.9.0
 SQLAlchemy>=1.4.0
-
 dill
 pyaml
 mlflow
 dagshub
 fastapi
 uvicorn
+python-multipart
+jinja2
+pydantic
+optuna
+joblib
+wandb  # 可选
 
 #-e .

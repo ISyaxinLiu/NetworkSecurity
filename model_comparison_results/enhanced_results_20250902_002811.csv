@@ -1,0 +1,6 @@
+Model,F1_Score,Precision,Recall,Accuracy,Best_Params,Is_Best
+Gradient Boosting,0.9751008488458655,0.975194470573882,0.9751243781094527,0.9751243781094527,"{'learning_rate': 0.2, 'subsample': 0.8, 'n_estimators': 300, 'max_depth': 7}",True
+Random Forest,0.9719432067714925,0.9719683615563462,0.9719583898688376,0.9719583898688376,"{'n_estimators': 300, 'max_depth': None, 'min_samples_split': 5, 'min_samples_leaf': 1, 'max_features': 'sqrt'}",False
+Decision Tree,0.9633346526580183,0.9633943445270463,0.9633649932157394,0.9633649932157394,"{'criterion': 'entropy', 'max_depth': None, 'min_samples_split': 10, 'min_samples_leaf': 1}",False
+AdaBoost,0.9342733937465024,0.9346615074141448,0.9344188150158299,0.9344188150158299,"{'algorithm': 'SAMME', 'learning_rate': 1.0, 'n_estimators': 500}",False
+Logistic Regression,0.9315628867712263,0.9318964006780845,0.9317051108095884,0.9317051108095884,"{'C': 0.1, 'penalty': 'l2', 'solver': 'saga'}",False
