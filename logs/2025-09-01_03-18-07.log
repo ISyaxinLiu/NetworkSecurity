@@ -1,0 +1,120 @@
+[ 2025-09-01 03:18:09,442 ] 20 root - INFO - Initiate the data ingestion
+[ 2025-09-01 03:18:09,442 ] 182 root - INFO - 开始数据摄取流程
+[ 2025-09-01 03:18:09,442 ] 185 root - INFO - 从PostgreSQL数据库读取数据
+[ 2025-09-01 03:18:09,442 ] 45 root - INFO - 开始从PostgreSQL读取数据: 数据库=ns, 表=NetworkData
+[ 2025-09-01 03:18:09,555 ] 59 root - INFO - 使用SQLAlchemy成功读取数据: 11055 行, 33 列
+[ 2025-09-01 03:18:09,555 ] 88 root - INFO - 移除了数据库ID列
+[ 2025-09-01 03:18:09,555 ] 92 root - INFO - 移除了创建时间列
+[ 2025-09-01 03:18:09,555 ] 97 root - INFO - 数据读取完成，最终数据形状: (11055, 31)
+[ 2025-09-01 03:18:09,555 ] 98 root - INFO - 列名: ['having_IP_Address', 'URL_Length', 'Shortining_Service', 'having_At_Symbol', 'double_slash_redirecting', 'Prefix_Suffix', 'having_Sub_Domain', 'SSLfinal_State', 'Domain_registeration_length', 'Favicon', 'port', 'HTTPS_token', 'Request_URL', 'URL_of_Anchor', 'Links_in_tags', 'SFH', 'Submitting_to_email', 'Abnormal_URL', 'Redirect', 'on_mouseover', 'RightClick', 'popUpWidnow', 'Iframe', 'age_of_domain', 'DNSRecord', 'web_traffic', 'Page_Rank', 'Google_Index', 'Links_pointing_to_page', 'Statistical_report', 'Result']
+[ 2025-09-01 03:18:09,555 ] 189 root - INFO - 读取数据概览:
+[ 2025-09-01 03:18:09,555 ] 190 root - INFO -   - 数据形状: (11055, 31)
+[ 2025-09-01 03:18:09,555 ] 191 root - INFO -   - 缺失值数量: 0
+[ 2025-09-01 03:18:09,555 ] 194 root - INFO -   - 目标变量分布: {1: 6157, -1: 4898}
+[ 2025-09-01 03:18:09,555 ] 197 root - INFO - 导出数据到特征存储
+[ 2025-09-01 03:18:09,579 ] 124 root - INFO - 数据成功导出到特征存储: Artifacts\09_01_2025_03_18_07\data_ingestion\feature_store\phisingData.csv
+[ 2025-09-01 03:18:09,579 ] 125 root - INFO - 导出数据形状: (11055, 31)
+[ 2025-09-01 03:18:09,579 ] 201 root - INFO - 分割数据为训练集和测试集
+[ 2025-09-01 03:18:09,584 ] 146 root - INFO - Performed train test split on the dataframe
+[ 2025-09-01 03:18:09,584 ] 147 root - INFO - 训练集大小: 8844, 测试集大小: 2211
+[ 2025-09-01 03:18:09,584 ] 149 root - INFO - Exited split_data_as_train_test method of Data_Ingestion class
+[ 2025-09-01 03:18:09,584 ] 157 root - INFO - Exporting train and test file path.
+[ 2025-09-01 03:18:09,609 ] 169 root - INFO - Exported train and test file path.
+[ 2025-09-01 03:18:09,609 ] 170 root - INFO - 训练文件: Artifacts\09_01_2025_03_18_07\data_ingestion\ingested\train.csv
+[ 2025-09-01 03:18:09,609 ] 171 root - INFO - 测试文件: Artifacts\09_01_2025_03_18_07\data_ingestion\ingested\test.csv
+[ 2025-09-01 03:18:09,610 ] 210 root - INFO - 数据摄取流程完成
+[ 2025-09-01 03:18:09,610 ] 211 root - INFO - 训练文件: Artifacts\09_01_2025_03_18_07\data_ingestion\ingested\train.csv
+[ 2025-09-01 03:18:09,610 ] 212 root - INFO - 测试文件: Artifacts\09_01_2025_03_18_07\data_ingestion\ingested\test.csv
+[ 2025-09-01 03:18:09,610 ] 22 root - INFO - Data Initiation Completed
+[ 2025-09-01 03:18:09,613 ] 26 root - INFO - Initiate the data Validation
+[ 2025-09-01 03:18:09,613 ] 182 root - INFO - 开始数据验证流程
+[ 2025-09-01 03:18:09,614 ] 183 root - INFO - 训练文件: Artifacts\09_01_2025_03_18_07\data_ingestion\ingested\train.csv
+[ 2025-09-01 03:18:09,614 ] 184 root - INFO - 测试文件: Artifacts\09_01_2025_03_18_07\data_ingestion\ingested\test.csv
+[ 2025-09-01 03:18:09,640 ] 190 root - INFO - 训练数据形状: (8844, 31)
+[ 2025-09-01 03:18:09,640 ] 191 root - INFO - 测试数据形状: (2211, 31)
+[ 2025-09-01 03:18:09,640 ] 44 root - INFO - Required number of columns: 31
+[ 2025-09-01 03:18:09,640 ] 45 root - INFO - Data frame has columns: 31
+[ 2025-09-01 03:18:09,640 ] 46 root - INFO - Data frame columns: ['having_IP_Address', 'URL_Length', 'Shortining_Service', 'having_At_Symbol', 'double_slash_redirecting', 'Prefix_Suffix', 'having_Sub_Domain', 'SSLfinal_State', 'Domain_registeration_length', 'Favicon', 'port', 'HTTPS_token', 'Request_URL', 'URL_of_Anchor', 'Links_in_tags', 'SFH', 'Submitting_to_email', 'Abnormal_URL', 'Redirect', 'on_mouseover', 'RightClick', 'popUpWidnow', 'Iframe', 'age_of_domain', 'DNSRecord', 'web_traffic', 'Page_Rank', 'Google_Index', 'Links_pointing_to_page', 'Statistical_report', 'Result']
+[ 2025-09-01 03:18:09,640 ] 44 root - INFO - Required number of columns: 31
+[ 2025-09-01 03:18:09,640 ] 45 root - INFO - Data frame has columns: 31
+[ 2025-09-01 03:18:09,640 ] 46 root - INFO - Data frame columns: ['having_IP_Address', 'URL_Length', 'Shortining_Service', 'having_At_Symbol', 'double_slash_redirecting', 'Prefix_Suffix', 'having_Sub_Domain', 'SSLfinal_State', 'Domain_registeration_length', 'Favicon', 'port', 'HTTPS_token', 'Request_URL', 'URL_of_Anchor', 'Links_in_tags', 'SFH', 'Submitting_to_email', 'Abnormal_URL', 'Redirect', 'on_mouseover', 'RightClick', 'popUpWidnow', 'Iframe', 'age_of_domain', 'DNSRecord', 'web_traffic', 'Page_Rank', 'Google_Index', 'Links_pointing_to_page', 'Statistical_report', 'Result']
+[ 2025-09-01 03:18:09,640 ] 82 root - INFO - 所有数值列验证通过
+[ 2025-09-01 03:18:09,640 ] 82 root - INFO - 所有数值列验证通过
+[ 2025-09-01 03:18:09,640 ] 108 root - INFO - Target column validation passed. Values: [-1  1]
+[ 2025-09-01 03:18:09,640 ] 108 root - INFO - Target column validation passed. Values: [-1  1]
+[ 2025-09-01 03:18:09,640 ] 232 root - INFO - 开始检测数据漂移
+[ 2025-09-01 03:18:09,640 ] 145 root - INFO - Column having_IP_Address: p_value=0.9903, drift=False
+[ 2025-09-01 03:18:09,644 ] 145 root - INFO - Column URL_Length: p_value=1.0000, drift=False
+[ 2025-09-01 03:18:09,644 ] 145 root - INFO - Column Shortining_Service: p_value=1.0000, drift=False
+[ 2025-09-01 03:18:09,644 ] 145 root - INFO - Column having_At_Symbol: p_value=1.0000, drift=False
+[ 2025-09-01 03:18:09,644 ] 145 root - INFO - Column double_slash_redirecting: p_value=1.0000, drift=False
+[ 2025-09-01 03:18:09,644 ] 145 root - INFO - Column Prefix_Suffix: p_value=1.0000, drift=False
+[ 2025-09-01 03:18:09,649 ] 145 root - INFO - Column having_Sub_Domain: p_value=0.2003, drift=False
+[ 2025-09-01 03:18:09,649 ] 145 root - INFO - Column SSLfinal_State: p_value=0.9715, drift=False
+[ 2025-09-01 03:18:09,649 ] 145 root - INFO - Column Domain_registeration_length: p_value=1.0000, drift=False
+[ 2025-09-01 03:18:09,654 ] 145 root - INFO - Column Favicon: p_value=1.0000, drift=False
+[ 2025-09-01 03:18:09,654 ] 145 root - INFO - Column port: p_value=1.0000, drift=False
+[ 2025-09-01 03:18:09,656 ] 145 root - INFO - Column HTTPS_token: p_value=0.9988, drift=False
+[ 2025-09-01 03:18:09,657 ] 145 root - INFO - Column Request_URL: p_value=1.0000, drift=False
+[ 2025-09-01 03:18:09,658 ] 145 root - INFO - Column URL_of_Anchor: p_value=1.0000, drift=False
+[ 2025-09-01 03:18:09,659 ] 145 root - INFO - Column Links_in_tags: p_value=1.0000, drift=False
+[ 2025-09-01 03:18:09,661 ] 145 root - INFO - Column SFH: p_value=0.9786, drift=False
+[ 2025-09-01 03:18:09,661 ] 145 root - INFO - Column Submitting_to_email: p_value=1.0000, drift=False
+[ 2025-09-01 03:18:09,663 ] 145 root - INFO - Column Abnormal_URL: p_value=0.9994, drift=False
+[ 2025-09-01 03:18:09,664 ] 145 root - INFO - Column Redirect: p_value=1.0000, drift=False
+[ 2025-09-01 03:18:09,664 ] 145 root - INFO - Column on_mouseover: p_value=1.0000, drift=False
+[ 2025-09-01 03:18:09,665 ] 145 root - INFO - Column RightClick: p_value=1.0000, drift=False
+[ 2025-09-01 03:18:09,666 ] 145 root - INFO - Column popUpWidnow: p_value=1.0000, drift=False
+[ 2025-09-01 03:18:09,667 ] 145 root - INFO - Column Iframe: p_value=1.0000, drift=False
+[ 2025-09-01 03:18:09,669 ] 145 root - INFO - Column age_of_domain: p_value=0.6771, drift=False
+[ 2025-09-01 03:18:09,670 ] 145 root - INFO - Column DNSRecord: p_value=1.0000, drift=False
+[ 2025-09-01 03:18:09,672 ] 145 root - INFO - Column web_traffic: p_value=0.9965, drift=False
+[ 2025-09-01 03:18:09,673 ] 145 root - INFO - Column Page_Rank: p_value=0.9983, drift=False
+[ 2025-09-01 03:18:09,674 ] 145 root - INFO - Column Google_Index: p_value=1.0000, drift=False
+[ 2025-09-01 03:18:09,676 ] 145 root - INFO - Column Links_pointing_to_page: p_value=0.9688, drift=False
+[ 2025-09-01 03:18:09,677 ] 145 root - INFO - Column Statistical_report: p_value=1.0000, drift=False
+[ 2025-09-01 03:18:09,677 ] 145 root - INFO - Column Result: p_value=1.0000, drift=False
+[ 2025-09-01 03:18:09,681 ] 164 root - INFO - Drift report saved to: Artifacts\09_01_2025_03_18_07\data_validation\drift_report\report.yaml
+[ 2025-09-01 03:18:09,681 ] 238 root - INFO - 未检测到显著数据漂移
+[ 2025-09-01 03:18:09,706 ] 259 root - INFO - 数据验证通过，文件保存到valid目录
+[ 2025-09-01 03:18:09,706 ] 291 root - INFO - 数据验证流程完成
+[ 2025-09-01 03:18:09,706 ] 28 root - INFO - data Validation Completed
+[ 2025-09-01 03:18:09,707 ] 31 root - INFO - data Transformation started
+[ 2025-09-01 03:18:09,707 ] 60 root - INFO - Entered initiate_data_transformation method of DataTransformation class
+[ 2025-09-01 03:18:09,707 ] 62 root - INFO - Starting data transformation
+[ 2025-09-01 03:18:09,728 ] 75 root - INFO - Training data shape: (8844, 31)
+[ 2025-09-01 03:18:09,728 ] 76 root - INFO - Testing data shape: (2211, 31)
+[ 2025-09-01 03:18:09,728 ] 83 root - INFO - Training features shape: (8844, 30)
+[ 2025-09-01 03:18:09,728 ] 84 root - INFO - Training target distribution: {1: 4926, 0: 3918}
+[ 2025-09-01 03:18:09,729 ] 91 root - INFO - Testing features shape: (2211, 30)
+[ 2025-09-01 03:18:09,729 ] 92 root - INFO - Testing target distribution: {1: 1231, 0: 980}
+[ 2025-09-01 03:18:09,729 ] 46 root - INFO - Entered get_data_transformer_object method of DataTransformation class
+[ 2025-09-01 03:18:09,729 ] 51 root - INFO - Initialised KNNImputer with {'missing_values': nan, 'n_neighbors': 3, 'weights': 'uniform'}
+[ 2025-09-01 03:18:09,729 ] 98 root - INFO - Fitting preprocessor on training data
+[ 2025-09-01 03:18:09,730 ] 102 root - INFO - Transforming training data
+[ 2025-09-01 03:18:09,730 ] 105 root - INFO - Transforming testing data
+[ 2025-09-01 03:18:09,730 ] 108 root - INFO - Transformed training data shape: (8844, 30)
+[ 2025-09-01 03:18:09,730 ] 109 root - INFO - Transformed testing data shape: (2211, 30)
+[ 2025-09-01 03:18:09,730 ] 115 root - INFO - Final training array shape: (8844, 31)
+[ 2025-09-01 03:18:09,730 ] 116 root - INFO - Final testing array shape: (2211, 31)
+[ 2025-09-01 03:18:09,730 ] 124 root - INFO - Saving transformed data arrays
+[ 2025-09-01 03:18:09,730 ] 135 root - INFO - Saving preprocessor object
+[ 2025-09-01 03:18:09,730 ] 46 root - INFO - Entered the save_object method of MainUtils class
+[ 2025-09-01 03:18:09,736 ] 50 root - INFO - Exited the save_object method of MainUtils class
+[ 2025-09-01 03:18:09,736 ] 46 root - INFO - Entered the save_object method of MainUtils class
+[ 2025-09-01 03:18:09,736 ] 50 root - INFO - Exited the save_object method of MainUtils class
+[ 2025-09-01 03:18:09,736 ] 149 root - INFO - Data transformation completed successfully
+[ 2025-09-01 03:18:09,736 ] 158 root - INFO - Data transformation artifact created:
+[ 2025-09-01 03:18:09,736 ] 159 root - INFO -   - Preprocessor: Artifacts\09_01_2025_03_18_07\data_transformation\transformed_object\preprocessing.pkl
+[ 2025-09-01 03:18:09,736 ] 160 root - INFO -   - Training data: Artifacts\09_01_2025_03_18_07\data_transformation\transformed\train.npy
+[ 2025-09-01 03:18:09,736 ] 161 root - INFO -   - Testing data: Artifacts\09_01_2025_03_18_07\data_transformation\transformed\test.npy
+[ 2025-09-01 03:18:09,736 ] 35 root - INFO - data Transformation completed
+[ 2025-09-01 03:18:09,736 ] 37 root - INFO - Model Training sstared
+[ 2025-09-01 03:19:48,320 ] 80 root - WARNING - MLflow tracking failed: INTERNAL_ERROR: Response: {'error': 'unsupported endpoint, please contact support@dagshub.com'}
+[ 2025-09-01 03:19:58,587 ] 80 root - WARNING - MLflow tracking failed: INTERNAL_ERROR: Response: {'error': 'unsupported endpoint, please contact support@dagshub.com'}
+[ 2025-09-01 03:19:58,589 ] 46 root - INFO - Entered the save_object method of MainUtils class
+[ 2025-09-01 03:19:58,594 ] 50 root - INFO - Exited the save_object method of MainUtils class
+[ 2025-09-01 03:19:58,594 ] 46 root - INFO - Entered the save_object method of MainUtils class
+[ 2025-09-01 03:19:58,603 ] 50 root - INFO - Exited the save_object method of MainUtils class
+[ 2025-09-01 03:19:58,603 ] 159 root - INFO - Model trainer artifact: ModelTrainerArtifact(trained_model_file_path='Artifacts\\09_01_2025_03_18_07\\model_trainer\\trained_model\\model.pkl', train_metric_artifact=ClassificationMetricArtifact(f1_score=0.9911987860394538, precision_score=0.9879007864488808, recall_score=0.9945188794153471), test_metric_artifact=ClassificationMetricArtifact(f1_score=0.9782082324455206, precision_score=0.9719326383319968, recall_score=0.9845653939886271))
+[ 2025-09-01 03:19:58,604 ] 42 root - INFO - Model Training artifact created

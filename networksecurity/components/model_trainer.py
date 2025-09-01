@@ -1,6 +1,7 @@
 import os
 import sys
 import numpy as np
+from datetime import datetime  # 添加这行
 
 from networksecurity.exception.exception import NetworkSecurityException 
 from networksecurity.logging.logger import logging
@@ -14,6 +15,7 @@ from networksecurity.utils.main_utils.utils import load_numpy_array_data, evalua
 from networksecurity.utils.ml_utils.metric.classification_metric import get_classification_score
 
 from sklearn.linear_model import LogisticRegression
+from sklearn.metrics import r2_score
 from sklearn.neighbors import KNeighborsClassifier
 from sklearn.tree import DecisionTreeClassifier
 from sklearn.ensemble import (
@@ -25,11 +27,9 @@ import mlflow
 from urllib.parse import urlparse
 
 import dagshub
-# dagshub.init(repo_owner='krishnaik06', repo_name='networksecurity', mlflow=True)
+dagshub.init(repo_owner='ISyaxinLiu', repo_name='NetworkSecurity', mlflow=True)
 
-os.environ["MLFLOW_TRACKING_URI"] = "https://dagshub.com/ISyaxinLiu/NetworkSecurity.mlflow"
-os.environ["MLFLOW_TRACKING_USERNAME"] = "ISyaxinLiu" 
-os.environ["MLFLOW_TRACKING_PASSWORD"] = "f36ccefd8aa76fa3d07a50e0baf446776f28f379"
+
 
 class ModelTrainer:
     def __init__(self, model_trainer_config: ModelTrainerConfig, 
@@ -39,42 +39,103 @@ class ModelTrainer:
             self.data_transformation_artifact = data_transformation_artifact
         except Exception as e:
             raise NetworkSecurityException(e, sys)
-        
+    
     def track_mlflow(self, best_model, classificationmetric, model_name: str):
         """
-        使用MLflow追踪模型实验
+        使用MLflow追踪模型实验 - 修复版本
         """
+        print(f"开始MLflow跟踪: {model_name}")
+        
         try:
-            mlflow.set_registry_uri("https://dagshub.com/ISyaxinLiu/NetworkSecurity.mlflow")
-            tracking_url_type_store = urlparse(mlflow.get_tracking_uri()).scheme
+            # 确保没有活跃的运行
+            if mlflow.active_run():
+                print("结束现有MLflow运行")
+                mlflow.end_run()
             
-            with mlflow.start_run():
-                f1_score = classificationmetric.f1_score
-                precision_score = classificationmetric.precision_score
-                recall_score = classificationmetric.recall_score
+            mlflow.set_registry_uri("https://dagshub.com/ISyaxinLiu/NetworkSecurity.mlflow")
+            print("MLflow registry URI设置完成")
+            
+            # 设置实验
+            experiment_name = "NetworkSecurity_Training"
+            try:
+                mlflow.set_experiment(experiment_name)
+                print(f"实验设置成功: {experiment_name}")
+            except:
+                mlflow.create_experiment(experiment_name)
+                mlflow.set_experiment(experiment_name)
+                print(f"实验创建并设置成功: {experiment_name}")
+            
+            # 创建运行
+            run_name = f"{model_name}_{datetime.now().strftime('%Y%m%d_%H%M%S')}"
+            
+            with mlflow.start_run(run_name=run_name) as run:
+                print(f"MLflow运行创建成功: {run.info.run_id}")
+                
+                f1_score = float(classificationmetric.f1_score)
+                precision_score = float(classificationmetric.precision_score)
+                recall_score = float(classificationmetric.recall_score)
+                
+                print(f"记录指标: F1={f1_score:.4f}, Precision={precision_score:.4f}, Recall={recall_score:.4f}")
 
                 # 记录指标
                 mlflow.log_metric("f1_score", f1_score)
                 mlflow.log_metric("precision", precision_score)
                 mlflow.log_metric("recall_score", recall_score)
                 
-                # 记录模型名称作为参数
+                # 记录参数
                 mlflow.log_param("model_type", model_name)
+                mlflow.log_param("data_source", "postgresql")
+                mlflow.log_param("timestamp", datetime.now().isoformat())
                 
+                # 记录标签
+                mlflow.set_tag("project", "NetworkSecurity")
+                mlflow.set_tag("task", "phishing_detection")
+                
+                print("指标和参数记录完成")
+                                
                 # 记录模型
-                mlflow.sklearn.log_model(best_model, "model")
+                try:
+                    tracking_url_type_store = urlparse(mlflow.get_tracking_uri()).scheme
+                    if tracking_url_type_store != "file":
+                        mlflow.sklearn.log_model(
+                            best_model, 
+                            "model", 
+                            registered_model_name=f"NetworkSecurity_{model_name}"
+                        )
+                        print("模型注册完成")
+                    else:
+                        mlflow.sklearn.log_model(best_model, "model")
+                        print("模型记录完成")
+                except Exception as model_error:
+                    print(f"模型记录失败: {model_error}")
                 
-                # 模型注册
-                if tracking_url_type_store != "file":
-                    mlflow.sklearn.log_model(best_model, "model", 
-                                           registered_model_name=f"NetworkSecurity_{model_name}")
-                else:
-                    mlflow.sklearn.log_model(best_model, "model")
-                    
-                logging.info(f"MLflow tracking completed for {model_name}")
+                experiment_id = run.info.experiment_id
+                run_id = run.info.run_id
+                
+                mlflow_url = f"https://dagshub.com/ISyaxinLiu/NetworkSecurity.mlflow/#/experiments/{experiment_id}/runs/{run_id}"
+                
+                print(f"MLflow跟踪完成!")
+                print(f"实验ID: {experiment_id}")
+                print(f"运行ID: {run_id}")
+                print(f"查看链接: {mlflow_url}")
+                
+                # 记录到日志
+                logging.info(f"MLflow跟踪完成: {mlflow_url}")
                 
         except Exception as e:
+            print(f"MLflow跟踪失败: {str(e)}")
+            import traceback
+            traceback.print_exc()
             logging.warning(f"MLflow tracking failed: {str(e)}")
+        
+
+
+
+
+
+
+
+
         
     def train_model(self, X_train, y_train, X_test, y_test):
         """
